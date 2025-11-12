@@ -1,1 +1,95 @@
-infra: add docker-compose file
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: zai_postgres
+    environment:
+      POSTGRES_USER: zai
+      POSTGRES_PASSWORD: zai123
+      POSTGRES_DB: zai_core
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    container_name: zai_redis
+    ports:
+      - "6379:6379"
+
+  minio:
+    image: minio/minio:latest
+    container_name: zai_minio
+    environment:
+      MINIO_ROOT_USER: zaiadmin
+      MINIO_ROOT_PASSWORD: zaistrongpass
+    command: server /data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
+    container_name: zai_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 2g
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.1
+    container_name: zai_kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  node-api:
+    build:
+      context: ../backend/node-api
+    container_name: zai_node_api
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - DB_URL=postgres://zai:zai123@postgres:5432/zai_core
+      - REDIS_HOST=redis
+    depends_on:
+      - postgres
+      - redis
+
+  python-ai:
+    build:
+      context: ../backend/python-ai
+    container_name: zai_python_ai
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
+    depends_on:
+      - node-api
+
+  react-dashboard:
+    build:
+      context: ../frontend/react-dashboard
+    container_name: zai_react_dashboard
+    ports:
+      - "5173:5173"
+    depends_on:
+      - node-api
+      - python-ai
+
+volumes:
+  postgres_data:
+  minio_data:
