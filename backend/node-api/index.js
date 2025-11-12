@@ -1,10 +1,13 @@
 import express from "express";
 import pkg from "pg";
 import Redis from "ioredis";
+import cors from "cors";
 
 const { Pool } = pkg;
 const app = express();
 const port = process.env.PORT || 4000;
+
+app.use(cors());
 
 const pool = new Pool({
   connectionString: process.env.DB_URL,
