@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ZAI Core – Project Blueprint Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Inter, Arial, sans-serif; margin: 0; padding: 24px; background: #f7f7fa; color: #222; }
+    h1 { font-size: 2em; margin-bottom: 0.25em; }
+    h2 { margin-top: 2em; }
+    .phase { margin-bottom: 2em; padding: 1em; background: #fff; border-radius: 6px; box-shadow: 0 1px 4px #e3e3e3;}
+    .task-list { list-style: none; padding-left: 0;}
+    .task-list li { margin-bottom: 0.5em; font-size: 1.04em; }
+    .done { color: #44c17a; font-weight: bold; }
+    input[type="checkbox"] { margin-right: 0.6em; transform: scale(1.25);}
+    .summary { background: #e3edfa; padding: 1em; border-radius: 6px; margin-bottom: 2em;}
+    .save-btn { background: #235; color: #fff; padding: 0.45em 1.5em; border-radius: 5px; border: none; font-size: 1em; cursor: pointer; margin-top: 1.5em;}
+    .save-btn:active { background: #447;}
+    @media (max-width: 600px) { body { padding: 8px; } }
+    .footer { margin-top: 2em; font-size: 0.95em; color: #666;}
+  </style>
+</head>
+<body>
+  <h1>ZAI Core – Project Blueprint</h1>
+  <div class="summary">
+    <strong>Current Focus:</strong><br>
+    ✅ Completed: Phase 1 Tasks 1–3<br>
+    <strong>Next Steps:</strong>
+    <ul>
+      <li>Add “/ping” routes → Node (4000) and Python (8000)</li>
+      <li>Connect frontend → Show “Online/Offline” status</li>
+      <li>Save this plan → ZAI-ROADMAP.md</li>
+    </ul>
+  </div>
+
+  <form id="trackerForm">
+    <div class="phase">
+      <h2>🌍 Phase 1: The Foundation</h2>
+      <ul class="task-list">
+        <li><input type="checkbox" data-id="P1-1"> Docker Infrastructure — Compose file with Postgres, Redis, MinIO, ElasticSearch, Kibana, Node API, Python AI, React Frontend. <span class="done" id="P1-1-status"></span></li>
+        <li><input type="checkbox" data-id="P1-2"> Local Networking — Containers talk via 4000 (Node), 8000 (Python), 5173 (Frontend). <span class="done" id="P1-2-status"></span></li>
+        <li><input type="checkbox" data-id="P1-3"> Frontend Boot — React + Vite inside Docker. <span class="done" id="P1-3-status"></span></li>
+        <li><input type="checkbox" data-id="P1-4"> API Base Routes — Node + Python services return “alive” / “ping” messages.</li>
+        <li><input type="checkbox" data-id="P1-5"> Frontend → Backend Connection — Dashboard shows backend/AI status live.</li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <h2>⚙️ Phase 2: Core System Development</h2>
+      <ul class="task-list">
+        <li><input type="checkbox" data-id="P2-1"> User System (Auth & Accounts) — Registration, login (JWT), roles, permissions.</li>
+        <li><input type="checkbox" data-id="P2-2"> Cloud Object Storage — Save/fetch data via MinIO.</li>
+        <li><input type="checkbox" data-id="P2-3"> Data Logging & Search — Logs + live search via ElasticSearch, Kibana.</li>
+        <li><input type="checkbox" data-id="P2-4"> Queue & Event System — Redis + Kafka (optional) for async processing.</li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <h2>🤖 Phase 3: ZAI Intelligence Layer</h2>
+      <ul class="task-list">
+        <li><input type="checkbox" data-id="P3-1"> AI Microservice Base — Python FastAPI with endpoints (/analyze, /train, /predict).</li>
+        <li><input type="checkbox" data-id="P3-2"> RAG Engine — Retrieval-Augmented Generation with LLM.</li>
+        <li><input type="checkbox" data-id="P3-3"> ZAI Knowledge Graph — Contextual memory (users, docs, logs).</li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <h2>💻 Phase 4: ZAIOS – Dashboard & Orchestration</h2>
+      <ul class="task-list">
+        <li><input type="checkbox" data-id="P4-1"> ZAI Dashboard (Core UI) — Monitor services/logs/storage/AI jobs.</li>
+        <li><input type="checkbox" data-id="P4-2"> ZAI Node (Control Panel) — Launch/stop containers, live metrics.</li>
+        <li><input type="checkbox" data-id="P4-3"> ZAI Cloud Sync — Cloud deployment hooks.</li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <h2>🌐 Phase 5: External Integrations</h2>
+      <ul class="task-list">
+        <li><input type="checkbox" data-id="P5-1"> n8n Automation — Workflow automation (APIs).</li>
+        <li><input type="checkbox" data-id="P5-2"> GitHub Actions + Jenkins + Ansible — CI/CD pipelines.</li>
+        <li><input type="checkbox" data-id="P5-3"> Terraform + Cloud Setup — Remote deployment.</li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <h2>🧩 Phase 6: ZAI Universe – Expansion</h2>
+      <ul class="task-list">
+        <li><input type="checkbox" data-id="P6-1"> ZAIOS (OS-like UI) — Full control OS with AI assistant.</li>
+        <li><input type="checkbox" data-id="P6-2"> ZAI Marketplace — Developers plug in modules.</li>
+        <li><input type="checkbox" data-id="P6-3"> ZAI Community Cloud — Peer-to-peer distributed AI.</li>
+      </ul>
+    </div>
+
+    <button type="button" class="save-btn" onclick="downloadMarkdown()">Export as ZAI-ROADMAP.md</button>
+  </form>
+
+  <div class="footer">
+    ⓘ Progress auto-saves in browser. To share or commit, use Export button.<br>
+    For advanced sprint/project tracking, consider tools like <strong>Trello</strong>, <strong>Notion</strong>, or <strong>GitHub Projects</strong>.
+  </div>
+
+  <script>
+    // Load checkbox state from localStorage
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelectorAll('input[type="checkbox"]').forEach(box => {
+        const state = localStorage.getItem(box.dataset.id);
+        box.checked = state === "true" ? true : false;
+        updateStatus(box);
+        box.addEventListener('change', function() {
+          localStorage.setItem(box.dataset.id, box.checked);
+          updateStatus(box);
+        });
+      });
+    });
+    function updateStatus(box) {
+      const statusId = box.dataset.id + "-status";
+      const statusSpan = document.getElementById(statusId);
+      if (statusSpan) {
+        statusSpan.textContent = box.checked ? "✓ Done" : "";
+      }
+    }
+    // Export as Markdown
+    function downloadMarkdown() {
+      let md = "# ZAI Core – Project Blueprint\n\n";
+      md += "**Current Focus:**\n";
+      md += "- Completed: Phase 1 Tasks 1–3\n";
+      md += "- Next: Add '/ping' routes, connect FE, save plan\n\n";
+      const phases = document.querySelectorAll(".phase");
+      phases.forEach(phase => {
+        md += "## " + phase.querySelector('h2').textContent + "\n";
+        phase.querySelectorAll(".task-list li").forEach(li => {
+          const box = li.querySelector('input[type="checkbox"]');
+          let status = box.checked ? "✅" : "🕐";
+          md += "- " + status + " " + li.textContent.replace(/✓ Done/, "").trim() + "\n";
+        });
+        md += "\n";
+      });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([md], {type: 'text/markdown'}));
+      a.download = 'ZAI-ROADMAP.md';
+      a.click();
+    }
+  </script>
+</body>
+</html>
