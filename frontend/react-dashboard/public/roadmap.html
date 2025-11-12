@@ -14,8 +14,8 @@
     .done { color: #44c17a; font-weight: bold; }
     input[type="checkbox"] { margin-right: 0.6em; transform: scale(1.25);}
     .summary { background: #e3edfa; padding: 1em; border-radius: 6px; margin-bottom: 2em;}
-    .save-btn { background: #235; color: #fff; padding: 0.45em 1.5em; border-radius: 5px; border: none; font-size: 1em; cursor: pointer; margin-top: 1.5em;}
-    .save-btn:active { background: #447;}
+    .save-btn, .save-html-btn { background: #235; color: #fff; padding: 0.45em 1.5em; border-radius: 5px; border: none; font-size: 1em; cursor: pointer; margin-top: 1.5em;}
+    .save-btn:active, .save-html-btn:active { background: #447;}
     @media (max-width: 600px) { body { padding: 8px; } }
     .footer { margin-top: 2em; font-size: 0.95em; color: #666;}
   </style>
@@ -90,13 +90,12 @@
         <li><input type="checkbox" data-id="P6-3"> ZAI Community Cloud — Peer-to-peer distributed AI.</li>
       </ul>
     </div>
-
     <button type="button" class="save-btn" onclick="downloadMarkdown()">Export as ZAI-ROADMAP.md</button>
+    <button type="button" class="save-html-btn" onclick="saveHTML()">Save Progress Locally</button>
   </form>
-
   <div class="footer">
-    ⓘ Progress auto-saves in browser. To share or commit, use Export button.<br>
-    For advanced sprint/project tracking, consider tools like <strong>Trello</strong>, <strong>Notion</strong>, or <strong>GitHub Projects</strong>.
+    ⓘ Progress auto-saves in browser. You can export as Markdown, or use <strong>Save Progress Locally</strong> for a full backup.<br>
+    Advanced tracking: Try Trello, Notion, GitHub Projects, or other PM tools.
   </div>
 
   <script>
@@ -138,6 +137,22 @@
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([md], {type: 'text/markdown'}));
       a.download = 'ZAI-ROADMAP.md';
+      a.click();
+    }
+    // Save HTML (with checkboxes as marked)
+    function saveHTML() {
+      // Serialize current checkbox states into the HTML
+      document.querySelectorAll('input[type="checkbox"]').forEach(box => {
+        if(box.checked) {
+          box.setAttribute("checked", "checked");
+        } else {
+          box.removeAttribute("checked");
+        }
+      });
+      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([html], {type: 'text/html'}));
+      a.download = 'ZAI-TRACKER-SAVED.html';
       a.click();
     }
   </script>
