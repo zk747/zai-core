@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
 
 app = FastAPI(title="ZAI Python AI Service")
 
@@ -35,3 +36,12 @@ def embed(query: Query):
     # dummy embedding — simple length-based vector for testing
     vector = [len(text), len(text) % 10, (len(text) * 7) % 97]
     return {"embedding": vector, "text_len": len(text)}
+
+# ✅ New ping route
+@app.get("/ping")
+def ping():
+    return {
+        "status": "ok",
+        "service": "python-ai",
+        "time": datetime.utcnow().isoformat()
+    }
