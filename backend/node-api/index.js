@@ -24,4 +24,12 @@ app.get("/health", async (req, res) => {
   }
 });
 
+app.get("/ping", (req, res) => {
+  res.json({
+    status: "ok",
+    service: "node-api",
+    time: new Date().toISOString()
+  });
+});
+
 app.listen(port, () => console.log(`Node API listening on ${port}`));
