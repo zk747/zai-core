@@ -1,7 +1,12 @@
+from modules.zai_reader.zai_reader import DocumentReader
+from pydantic import BaseModel
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
+
+class FolderRequest(BaseModel):
+    folder_path: str
 
 app = FastAPI(title="ZAI Python AI Service")
 
@@ -36,6 +41,12 @@ def embed(query: Query):
     # dummy embedding — simple length-based vector for testing
     vector = [len(text), len(text) % 10, (len(text) * 7) % 97]
     return {"embedding": vector, "text_len": len(text)}
+
+@app.post("/read-folder")
+def read_folder(req: FolderRequest):
+    reader = DocumentReader(max_file_size_mb=50)
+    files = reader.scan_folder(req.folder_path)
+    return {"files": files}
 
 # ✅ New ping route
 @app.get("/ping")
