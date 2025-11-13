@@ -69,7 +69,7 @@ services:
       - postgres
       - redis
 
-    python-ai:
+  python-ai:
     build:
       context: ../backend/python-ai
     container_name: zai_python_ai
