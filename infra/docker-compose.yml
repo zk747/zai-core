@@ -69,18 +69,18 @@ services:
       - postgres
       - redis
 
-  python-ai:
-  build:
-    context: ../backend/python-ai
-  container_name: zai_python_ai
-  ports:
-    - "8000:8000"
-  volumes:
-    - "C:/Users/ZK747/Documents:/data"
-  environment:
-    - MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
-  depends_on:
-    - node-api
+    python-ai:
+    build:
+      context: ../backend/python-ai
+    container_name: zai_python_ai
+    ports:
+      - "8000:8000"
+    volumes:
+      - "C:/Users/ZK747/Documents:/data"
+    environment:
+      - MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
+    depends_on:
+      - node-api
 
   react-dashboard:
     build:
