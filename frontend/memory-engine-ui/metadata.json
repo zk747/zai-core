@@ -1,0 +1,5 @@
+{
+  "name": "ZAI Memory Engine",
+  "description": "A dashboard to scan a folder path and display file information like word count and status in a table.",
+  "requestFramePermissions": []
+}
